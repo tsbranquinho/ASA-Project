@@ -11,36 +11,36 @@ struct Item {
 
 int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
     
-    int dp[n + 1][spaceLength + 1][spaceWidth + 1];
+    int dp[spaceLength+1][spaceWidth+1];
     memset(dp, 0, sizeof(dp));
 
    
-    for (int i = 1; i <= n; ++i) {
+    for (int w = 0; w <= spaceWidth; ++w) {
 
         for (int l = 0; l <= spaceLength; ++l) {
 
-            for (int w = 0; w <= spaceWidth; ++w) {
+            for (int i = 0; i < 2; i++) {
                 
-                if (items[i - 1].length <= l && items[i - 1].width <= w) {
+                if (items[i].length <= l && items[i].width <= w) {
 
-                    dp[i][l][w] = max(dp[i - 1][l][w], items[i - 1].value + dp[i][l - items[i - 1].length][w - items[i - 1].width]);
-                } else {
-                    
-                    dp[i][l][w] = dp[i - 1][l][w];
+                   dp[l][w] = max(dp[l][w], items[i].value + dp[l][w - items[i].width]);
+                   dp[l][w] = max(dp[l][w], items[i].value + dp[l-items[i].length][w]);
+                   //dp[i][l][w] = max(dp[i][l][w], items[i - 1].value + dp[i][l - items[i - 1].length][w]);
+                   //dp[w] = max(dp[w], values[i] + dp[w - weights[i]]);
                 }
             }
         }
     }
-
-    return dp[n][spaceLength][spaceWidth];
+    
+    return dp[spaceLength][spaceWidth];
 }
 
 int main() {
    
-    Item items[] = {{1, 3, 1}, {2, 2, 2}};
-    int n = sizeof(items) / sizeof(items[0]);
-    int spaceLength = 4;
-    int spaceWidth = 4;
+    Item items[] = {{1, 3, 2}, {2, 2, 1}};
+    int n = 2;
+    int spaceLength = 2;
+    int spaceWidth = 6;
 
     
     int result = knapsack(items, n, spaceLength, spaceWidth);
