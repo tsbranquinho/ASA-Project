@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include <fstream>
 
 using namespace std;
 
@@ -9,6 +8,9 @@ struct Item {
     int width;
     int value;
 };
+
+
+
 
 int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
     int dp[spaceLength + 1][spaceWidth + 1];
@@ -43,25 +45,17 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
     return dp[spaceLength][spaceWidth];
 }
 
+
 int main() {
-
-    ifstream inputFile("large_input.txt");
-
-    int spaceLength, spaceWidth, n;
-    inputFile >> spaceLength >> spaceWidth >> n;
-
-    Item items[n];
-    for (int i = 0; i < n; ++i) {
-        inputFile >> items[i].length >> items[i].width >> items[i].value;
-    }
-
-    inputFile.close();
+   
+    Item items[] = {{2,1,5}};
+    int n = 1;
+    int spaceLength = 2;
+    int spaceWidth = 8;
 
     int result = knapsack(items, n, spaceLength, spaceWidth);
-
-    printf("%d\n", result);
+    
+    cout << result << endl;
 
     return 0;
 }
-
-
