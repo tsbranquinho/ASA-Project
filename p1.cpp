@@ -13,36 +13,36 @@ struct Item {
 
 int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
     int dp[spaceLength + 1][spaceWidth + 1];
+
+    //inicializa se a 0 porque a primeira vez que se obtem o resultado da peca e preciso buscar o 0
     memset(dp, 0, sizeof(dp));
 
-
-    for (int l = 1; l <= spaceLength; l++) {
-        for (int w = 1; w <= spaceWidth; w++) {
-            for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
+        for (int l = 1; l <= spaceLength; l++) {
+            for (int w = 1; w <= spaceWidth; w++) {
+            
                 if (l >= items[i].length && items[i].width <= w) {
+                    
+                    //algoritmo 101 do knapsack para ver se da para por a peca ou nao
                     dp[l][w] = max({dp[l][w], items[i].value + dp[l][w - items[i].width], items[i].value + dp[l - items[i].length][w]});
 
-                    if (l % items[i].length == 0 && w % items[i].width == 0) {
-                        dp[l][w] = max(dp[l][w], items[i].value * ((l * w) / (items[i].length * items[i].width)));
-                    }
+                    //o corte e feito pensando na juncao de 2 pecas ja feitas com a peca atual
+                    //ve se o corte vertical e melhor que o valor que ja la esta
+                    dp[l][w] = max({dp[l-items[i].length][w] + dp[items[i].length][w], dp[l][w]});
+                    //ve se o corte horizontal e melhor que o valor que ja la esta
+                    dp[l][w] = max({dp[l][w - items[i].width] + dp[items[i].width][1], dp[l][w]});
 
-                    dp[l][w] = max({dp[l][w], dp[l][w-1] + dp[l][1], dp[l-1][w] + dp[1][w]});
-
-                }
+                }   //anologo ao de cima so se roda a peca
                 if (w >= items[i].length && items[i].width <= l) {
 
                     dp[l][w] = max({dp[l][w], items[i].value + dp[l - items[i].width][w], items[i].value + dp[l][w - items[i].length]});
+                    dp[l][w] = max({dp[l - items[i].width][w] + dp[items[i].width][w], dp[l][w]});
+                    dp[l][w] = max({dp[l][w - items[i].length] + dp[l][items[i].length], dp[l][w]});
 
-                    if (w % items[i].length == 0 && l % items[i].width == 0) {
-                        dp[l][w] = max(dp[l][w], items[i].value * ((l * w) / (items[i].length * items[i].width)));
-                    }
-
-                    dp[l][w] = max({dp[l][w], dp[l][w-1] + dp[l][1], dp[l-1][w] + dp[1][w]});
                 }
             }
         }
     }
-
     return dp[spaceLength][spaceWidth];
 }
 
