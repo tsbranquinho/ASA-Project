@@ -12,33 +12,46 @@ struct Item {
 };
 
 int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
+    // Initialize the dynamic programming table import for the start of the algorithm
     int dp[spaceLength + 1][spaceWidth + 1];
-
-    //inicializa se a 0 porque a primeira vez que se obtem o resultado da peca e preciso buscar o 0
     memset(dp, 0, sizeof(dp));
 
+    // Iterate over each item
     for (int i = 0; i < n; i++) {
+        // Iterate over possible lengths
         for (int l = 1; l <= spaceLength; l++) {
+            // Iterate over possible widths
             for (int w = 1; w <= spaceWidth; w++) {
             
+                // Check if the item can fit at the current position
                 if (l >= items[i].length && items[i].width <= w) {
-                    
-                    //algoritmo 101 do knapsack para ver se da para por a peca ou nao
-                    dp[l][w] = max({dp[l][w], items[i].value + dp[l][w - items[i].width], items[i].value + dp[l - items[i].length][w]});
+                    // Knapsack algorithm to determine the maximum value
+                    dp[l][w] = max({
+                        dp[l][w],                           // Case 1: Don't use the current item
+                        items[i].value + dp[l][w - items[i].width],       // Case 2: Use the current item and gets the left neighbour on the table
+                        items[i].value + dp[l - items[i].length][w]        // Case 3: Use the current item vertically the gets the upper neighbour on the table
+                    });
 
-                    //o corte e feito pensando na juncao de 2 pecas ja feitas com a peca atual
-                    //ve se o corte vertical e melhor que o valor que ja la esta
-                    dp[l][w] = max({dp[l-items[i].length][w] + dp[items[i].length][w], dp[l][w]});
-                    //ve se o corte horizontal e melhor que o valor que ja la esta
-                    dp[l][w] = max({dp[l][w - items[i].width] + dp[items[i].width][1], dp[l][w]});
+                    // Cutting the pieces and considering the combination of two existing pieces with the current one
+                    dp[l][w] = max({
+                        dp[l - items[i].length][w] + dp[items[i].length][w],  // Vertical cut
+                        dp[l][w - items[i].width] + dp[items[i].width][1],    // Horizontal cut
+                        dp[l][w]
+                    });
+                }
 
-                }   //analogo ao de cima so se roda a peca
+                // Similar logic for the case when the item is rotated
                 if (w >= items[i].length && items[i].width <= l) {
-
-                    dp[l][w] = max({dp[l][w], items[i].value + dp[l - items[i].width][w], items[i].value + dp[l][w - items[i].length]});
-                    dp[l][w] = max({dp[l - items[i].width][w] + dp[items[i].width][w], dp[l][w]});
-                    dp[l][w] = max({dp[l][w - items[i].length] + dp[l][items[i].length], dp[l][w]});
-
+                    dp[l][w] = max({
+                        dp[l][w],
+                        items[i].value + dp[l - items[i].width][w],
+                        items[i].value + dp[l][w - items[i].length]
+                    });
+                    dp[l][w] = max({
+                        dp[l - items[i].width][w] + dp[items[i].width][w],
+                        dp[l][w - items[i].length] + dp[l][items[i].length],
+                        dp[l][w]
+                    });
                 }
             }
         }
