@@ -32,7 +32,7 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
                     //ve se o corte horizontal e melhor que o valor que ja la esta
                     dp[l][w] = max({dp[l][w - items[i].width] + dp[items[i].width][1], dp[l][w]});
 
-                }   //anologo ao de cima so se roda a peca
+                }   //analogo ao de cima so se roda a peca
                 if (w >= items[i].length && items[i].width <= l) {
 
                     dp[l][w] = max({dp[l][w], items[i].value + dp[l - items[i].width][w], items[i].value + dp[l][w - items[i].length]});
