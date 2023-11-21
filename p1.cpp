@@ -40,8 +40,8 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
                     });
                 }
 
-                // Similar logic for the case when the item is rotated
-                if (w >= items[i].length && items[i].width <= l) {
+                // Similar logic for the case when the item is rotated, if its a square there is no need to rotate
+                if (w >= items[i].length && items[i].width <= l && items[i].length != items[i].width) {
                     dp[l][w] = max({
                         dp[l][w],
                         items[i].value + dp[l - items[i].width][w],
