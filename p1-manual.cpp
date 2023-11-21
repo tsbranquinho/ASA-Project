@@ -48,7 +48,7 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
 
 int main() {
    
-    Item items[] = {{2,1,5}};
+    Item items[] = {{2,2,5}};
     int n = 1;
     int spaceLength = 2;
     int spaceWidth = 8;
