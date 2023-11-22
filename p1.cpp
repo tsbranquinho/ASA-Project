@@ -60,18 +60,17 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
 }
 
 int main() {
-
-    ifstream inputFile("large_input.txt");
-
     int spaceLength, spaceWidth, n;
-    inputFile >> spaceLength >> spaceWidth >> n;
+    
+    scanf("%d %d", &spaceLength, &spaceWidth);
+
+    scanf("%d", &n);
 
     Item items[n];
     for (int i = 0; i < n; ++i) {
-        inputFile >> items[i].length >> items[i].width >> items[i].value;
-    }
 
-    inputFile.close();
+        scanf("%d %d %d", &items[i].length, &items[i].width, &items[i].value);
+    }
 
     int result = knapsack(items, n, spaceLength, spaceWidth);
 
