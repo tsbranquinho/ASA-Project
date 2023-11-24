@@ -1,58 +1,29 @@
 #include <iostream>
-#include <cstring>
-#include <fstream>
+#include <vector>
 #include <algorithm>
 
-using namespace std;
+//O(C x L x min (L e C)
 
-struct Item {
-    int length;
-    int width;
-    int value;
-};
+int knapsack(std::vector<std::vector<int>>& dp, int spaceLength, int spaceWidth) {
 
-int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
-    // Initialize the dynamic programming table import for the start of the algorithm
-    int dp[spaceLength + 1][spaceWidth + 1];
-    memset(dp, 0, sizeof(dp));
+   
+    for (int l = 1; l <= spaceLength; l++) {
+        for (int w = 1; w <= spaceWidth; w++) {
 
-    // Iterate over each item
-    for (int i = 0; i < n; i++) {
-        // Iterate over possible lengths
-        for (int l = 1; l <= spaceLength; l++) {
-            // Iterate over possible widths
-            for (int w = 1; w <= spaceWidth; w++) {
-            
-                // Check if the item can fit at the current position
-                if (l >= items[i].length && items[i].width <= w) {
-                    // Knapsack algorithm to determine the maximum value
-                    dp[l][w] = max({
-                        dp[l][w],                           // Case 1: Don't use the current item
-                        items[i].value + dp[l][w - items[i].width],       // Case 2: Use the current item and gets the left neighbour on the table
-                        items[i].value + dp[l - items[i].length][w]        // Case 3: Use the current item vertically the gets the upper neighbour on the table
-                    });
+            // Vertical cuts
+            for (int i = 0; l - i >= 0; i++) {
+                dp[l][w] = std::max({
+                    dp[l - i][w] + dp[i][w],
+                    dp[l][w]                             // If there is an item already there with a bigger value than the combination of cuts
+                });
+            }
 
-                    // Cutting the pieces and considering the combination of two existing pieces with the current one
-                    dp[l][w] = max({
-                        dp[l - items[i].length][w] + dp[items[i].length][w],  // Vertical cut
-                        dp[l][w - items[i].width] + dp[items[i].width][1],    // Horizontal cut
-                        dp[l][w]
-                    });
-                }
-
-                // Similar logic for the case when the item is rotated, if its a square there is no need to rotate
-                if (w >= items[i].length && items[i].width <= l && items[i].length != items[i].width) {
-                    dp[l][w] = max({
-                        dp[l][w],
-                        items[i].value + dp[l - items[i].width][w],
-                        items[i].value + dp[l][w - items[i].length]
-                    });
-                    dp[l][w] = max({
-                        dp[l - items[i].width][w] + dp[items[i].width][w],
-                        dp[l][w - items[i].length] + dp[l][items[i].length],
-                        dp[l][w]
-                    });
-                }
+            // Horizontal cuts
+            for (int i = 0; w - i >= 0; i++) {
+                dp[l][w] = std::max({
+                    dp[l][w - i] + dp[l][i],
+                    dp[l][w]                             // If there is an item already there with a bigger value than the combination of cuts
+                });
             }
         }
     }
@@ -60,21 +31,30 @@ int knapsack(Item items[], int n, int spaceLength, int spaceWidth) {
 }
 
 int main() {
-    int spaceLength, spaceWidth, n;
-    
+    int spaceLength, spaceWidth, n, length, width, value;
+
     scanf("%d %d", &spaceLength, &spaceWidth);
+
+    // Initialize the dynamic programming table
+    std::vector<std::vector<int>> dp(spaceLength + 1, std::vector<int>(spaceWidth + 1, 0));
 
     scanf("%d", &n);
 
-    Item items[n];
-    for (int i = 0; i < n; ++i) {
+    for (; n > 0; n--) {
+        scanf("%d %d %d", &length, &width, &value);
 
-        scanf("%d %d %d", &items[i].length, &items[i].width, &items[i].value);
+        if (length <= spaceLength && width <= spaceWidth) {
+                    dp[length][width] = std::max(value, dp[length][width]);
+        }
+        if (width <= spaceLength && length <= spaceWidth) {
+                    dp[width][length] = std::max(value, dp[width][length]);
+        }
     }
 
-    int result = knapsack(items, n, spaceLength, spaceWidth);
+    int result = knapsack(dp, spaceLength, spaceWidth);
 
     printf("%d\n", result);
 
     return 0;
 }
+
