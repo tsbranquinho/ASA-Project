@@ -2,32 +2,30 @@
 #include <vector>
 #include <algorithm>
 
-//O(C x L x min (L e C)
-
 int knapsack(std::vector<std::vector<int>>& dp, int spaceLength, int spaceWidth) {
 
    
     for (int l = 1; l <= spaceLength; l++) {
         for (int w = 1; w <= spaceWidth; w++) {
 
-            // Vertical cuts
+            // All possible Vertical cuts
             for (int i = 0; l - i >= 0; i++) {
                 dp[l][w] = std::max({
                     dp[l - i][w] + dp[i][w],
-                    dp[l][w]                             // If there is an item already there with a bigger value than the combination of cuts
+                    dp[l][w]  // If there is an item already there with a bigger value than the combination of cuts
                 });
             }
 
-            // Horizontal cuts
+            // All possible Horizontal cuts
             for (int i = 0; w - i >= 0; i++) {
                 dp[l][w] = std::max({
                     dp[l][w - i] + dp[l][i],
-                    dp[l][w]                             // If there is an item already there with a bigger value than the combination of cuts
+                    dp[l][w]   // If there is an item already there with a bigger value than the combination of cuts
                 });
             }
         }
     }
-    return dp[spaceLength][spaceWidth];
+    return dp[spaceLength][spaceWidth]; //best combination of cuts possible
 }
 
 int main() {
@@ -40,6 +38,7 @@ int main() {
 
     scanf("%d", &n);
 
+    //put the items in the table
     for (; n > 0; n--) {
         scanf("%d %d %d", &length, &width, &value);
 
