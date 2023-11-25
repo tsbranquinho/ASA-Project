@@ -2,23 +2,25 @@
 #include <vector>
 #include <algorithm>
 
-int knapsack(std::vector<std::vector<int>>& dp, int spaceLength, int spaceWidth) {
+using namespace std;
+
+int knapsack(vector<vector<int>>& dp, int spaceLength, int spaceWidth) {
 
    
     for (int l = 1; l <= spaceLength; l++) {
         for (int w = 1; w <= spaceWidth; w++) {
 
             // All possible Vertical cuts
-            for (int i = 0; l - i >= 0; i++) {
-                dp[l][w] = std::max({
+            for (int i = 0; l - i >= l/2; i++) {
+                dp[l][w] = max({
                     dp[l - i][w] + dp[i][w],
                     dp[l][w]  // If there is an item already there with a bigger value than the combination of cuts
                 });
             }
 
             // All possible Horizontal cuts
-            for (int i = 0; w - i >= 0; i++) {
-                dp[l][w] = std::max({
+            for (int i = 0; w - i >= w/2; i++) {
+                dp[l][w] = max({
                     dp[l][w - i] + dp[l][i],
                     dp[l][w]   // If there is an item already there with a bigger value than the combination of cuts
                 });
@@ -34,7 +36,7 @@ int main() {
     scanf("%d %d", &spaceLength, &spaceWidth);
 
     // Initialize the dynamic programming table
-    std::vector<std::vector<int>> dp(spaceLength + 1, std::vector<int>(spaceWidth + 1, 0));
+    vector<vector<int>> dp(spaceLength + 1, vector<int>(spaceWidth + 1, 0));
 
     scanf("%d", &n);
 
@@ -43,10 +45,10 @@ int main() {
         scanf("%d %d %d", &length, &width, &value);
 
         if (length <= spaceLength && width <= spaceWidth) {
-                    dp[length][width] = std::max(value, dp[length][width]);
+                    dp[length][width] = max(value, dp[length][width]);
         }
         if (width <= spaceLength && length <= spaceWidth) {
-                    dp[width][length] = std::max(value, dp[width][length]);
+                    dp[width][length] = max(value, dp[width][length]);
         }
     }
 
