@@ -4,11 +4,11 @@
 
 using namespace std;
 
-int knapsack(vector<vector<int>>& dp, int spaceLength, int spaceWidth) {
+int knapsack(vector<vector<int>>& dp, int spaceLength, int spaceWidth, int min) {
 
    
-    for (int l = 1; l <= spaceLength; l++) {
-        for (int w = 1; w <= spaceWidth; w++) {
+    for (int l = min; l <= spaceLength; l++) {
+        for (int w = min; w <= spaceWidth; w++) {
 
             // All possible Vertical cuts
             for (int i = 0; l - i >= l/2; i++) {
@@ -38,6 +38,8 @@ int main() {
     // Initialize the dynamic programming table
     vector<vector<int>> dp(spaceLength + 1, vector<int>(spaceWidth + 1, 0));
 
+    int min = spaceLength < spaceWidth ? spaceLength : spaceWidth;
+
     scanf("%d", &n);
 
     //put the items in the table
@@ -50,9 +52,13 @@ int main() {
         if (width <= spaceLength && length <= spaceWidth) {
                     dp[width][length] = max(value, dp[width][length]);
         }
+        if (length <= min)
+            min = length;
+        if (width <= min)
+            min = width;
     }
 
-    int result = knapsack(dp, spaceLength, spaceWidth);
+    int result = knapsack(dp, spaceLength, spaceWidth, min);
 
     printf("%d\n", result);
 
