@@ -33,18 +33,21 @@ int knapsack(vector<vector<int>>& dp, int spaceLength, int spaceWidth, int min) 
 int main() {
     int spaceLength, spaceWidth, n, length, width, value;
 
-    scanf("%d %d", &spaceLength, &spaceWidth);
+    if (scanf("%d %d", &spaceLength, &spaceWidth) == EOF)
+        return 0;
 
     // Initialize the dynamic programming table
     vector<vector<int>> dp(spaceLength + 1, vector<int>(spaceWidth + 1, 0));
 
     int min = spaceLength < spaceWidth ? spaceLength : spaceWidth;
 
-    scanf("%d", &n);
+    if (scanf("%d", &n) == EOF)
+        return 0;
 
     //put the items in the table
     for (; n > 0; n--) {
-        scanf("%d %d %d", &length, &width, &value);
+        if (scanf("%d %d %d", &length, &width, &value) == EOF)
+            return 0;
 
         if (length <= spaceLength && width <= spaceWidth) {
                     dp[length][width] = max(value, dp[length][width]);
