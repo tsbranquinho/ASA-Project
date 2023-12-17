@@ -35,60 +35,51 @@ const int UNVISITED = -1;
 
 
 //DA BEM PARA CASOS QUE NAO TENHAM SCC > 1
-void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stackOriginal, int& id, int& sccCount) {
+void dfs(int start, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& onStack, stack<int>& stackOriginal, int& id, int& sccCount) {
     stack<int> dfsStack;
-    vector<int> path;
-    dfsStack.push(at);
+    dfsStack.push(start);
 
     while (!dfsStack.empty()) {
-        int current = dfsStack.top();
-        int next = 0;
-
-        if (ids[current] == UNVISITED) {
-            ids[current] = low[current] = id++;
-            stackOriginal.push(current);
-            path.push_back(current);
-            visited[current] = true;
+        int at = dfsStack.top();
+        if (ids[at] == UNVISITED) {
+            ids[at] = low[at] = id++;
+            stackOriginal.push(at);
+            onStack[at] = true;
         }
 
-        bool backtracked = true;
-
-        for (int to : graph[current]) {
-            next = to;
+        bool pushed = false;
+        for (int to : graph[at]) {
             if (ids[to] == UNVISITED) {
                 dfsStack.push(to);
-                backtracked = false;
+                pushed = true;
                 break;
+            } else if (onStack[to]) {
+                low[at] = min(low[at], low[to]);
             }
         }
 
-        if (backtracked) {
-            for (int i = (int) path.size() - 1; i >= 0; --i) {
-                if (visited[path[i]]) {
-                    low[path[i]] = min(low[path[i]], low[current]);
+        if (!pushed) {
+            if (ids[at] == low[at]) {
+                while (!stackOriginal.empty()) {
+                    int node = stackOriginal.top();
+                    stackOriginal.pop();
+                    onStack[node] = false;
+                    sccs[node] = sccCount;
+                    if (node == at) {
+                        break;
+                    }
                 }
-                if (path[i] == next) {
-                    break;
-                }
+                ++sccCount;
             }
             dfsStack.pop();
-            if (!stackOriginal.empty()) {
-                int node = stackOriginal.top();
-                stackOriginal.pop();
-                visited[node] = false;
-                sccs[node] = sccCount;
-                if (node == current) {
-                    sccCount++;
-                }
-            }
         }
     }
 }
+
 
 //DA BEM PARA CASOS QUE NAO TEM DE OLHAR PARA NOVOS VERTICES
-void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stackOriginal, int& id, int& sccCount) {
+/*void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& onStack, stack<int>& stackOriginal, int& id, int& sccCount) {
     stack<int> dfsStack;
-    vector<int> path;
     dfsStack.push(at);
 
     while (!dfsStack.empty()) {
@@ -98,8 +89,7 @@ void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>
         if (ids[current] == UNVISITED) {
             ids[current] = low[current] = id++;
             stackOriginal.push(current);
-            path.push_back(current);
-            visited[current] = true;
+            onStack[current] = true;
         }
 
         bool backtracked = true;
@@ -107,25 +97,22 @@ void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>
         for (int to : graph[current]) {
             next = to;
             if (ids[to] == UNVISITED) {
-                dfsStack.pop();
                 dfsStack.push(to);
+                onStack[to] = true;
                 backtracked = false;
                 break;
+            } else if (onStack[to]) {
+                // Back edge found
+                low[current] = min(low[current], ids[to]);  // Corrected line
             }
         }
 
         if (backtracked) {
-            for (int i = (int) path.size() - 1; i >= 0; --i) {
-              if (visited[next]) {
-                low[path[i]] = min(low[path[i]], low[next]);
-                next = graph[path[i]][0];
-              }
-            }
             dfsStack.pop();
             if (!stackOriginal.empty()) {
                 int node = stackOriginal.top();
                 stackOriginal.pop();
-                visited[node] = false;
+                onStack[node] = false;
                 sccs[node] = sccCount;
                 if (node == current) {
                     sccCount++;
@@ -133,7 +120,7 @@ void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>
             }
         }
     }
-}
+}*/
 
 int tarjanSccSolver(const vector<vector<int>>& graph, vector<int>& sccs) {
   int n = graph.size();
