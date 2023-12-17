@@ -7,7 +7,7 @@ using namespace std;
 
 const int UNVISITED = -1;
 
-void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stack, int& id, int& sccCount) {
+/*void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stack, int& id, int& sccCount) {
   ids[at] = low[at] = id++;
   stack.push(at);
   visited[at] = true;
@@ -31,6 +31,108 @@ void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>
     }
     sccCount++;
   }
+}*/
+
+
+//DA BEM PARA CASOS QUE NAO TENHAM SCC > 1
+void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stackOriginal, int& id, int& sccCount) {
+    stack<int> dfsStack;
+    vector<int> path;
+    dfsStack.push(at);
+
+    while (!dfsStack.empty()) {
+        int current = dfsStack.top();
+        int next = 0;
+
+        if (ids[current] == UNVISITED) {
+            ids[current] = low[current] = id++;
+            stackOriginal.push(current);
+            path.push_back(current);
+            visited[current] = true;
+        }
+
+        bool backtracked = true;
+
+        for (int to : graph[current]) {
+            next = to;
+            if (ids[to] == UNVISITED) {
+                dfsStack.push(to);
+                backtracked = false;
+                break;
+            }
+        }
+
+        if (backtracked) {
+            for (int i = (int) path.size() - 1; i >= 0; --i) {
+                if (visited[path[i]]) {
+                    low[path[i]] = min(low[path[i]], low[current]);
+                }
+                if (path[i] == next) {
+                    break;
+                }
+            }
+            dfsStack.pop();
+            if (!stackOriginal.empty()) {
+                int node = stackOriginal.top();
+                stackOriginal.pop();
+                visited[node] = false;
+                sccs[node] = sccCount;
+                if (node == current) {
+                    sccCount++;
+                }
+            }
+        }
+    }
+}
+
+//DA BEM PARA CASOS QUE NAO TEM DE OLHAR PARA NOVOS VERTICES
+void dfs(int at, const vector<vector<int>>& graph, vector<int>& ids, vector<int>& low, vector<int>& sccs, vector<bool>& visited, stack<int>& stackOriginal, int& id, int& sccCount) {
+    stack<int> dfsStack;
+    vector<int> path;
+    dfsStack.push(at);
+
+    while (!dfsStack.empty()) {
+        int current = dfsStack.top();
+        int next = 0;
+
+        if (ids[current] == UNVISITED) {
+            ids[current] = low[current] = id++;
+            stackOriginal.push(current);
+            path.push_back(current);
+            visited[current] = true;
+        }
+
+        bool backtracked = true;
+
+        for (int to : graph[current]) {
+            next = to;
+            if (ids[to] == UNVISITED) {
+                dfsStack.pop();
+                dfsStack.push(to);
+                backtracked = false;
+                break;
+            }
+        }
+
+        if (backtracked) {
+            for (int i = (int) path.size() - 1; i >= 0; --i) {
+              if (visited[next]) {
+                low[path[i]] = min(low[path[i]], low[next]);
+                next = graph[path[i]][0];
+              }
+            }
+            dfsStack.pop();
+            if (!stackOriginal.empty()) {
+                int node = stackOriginal.top();
+                stackOriginal.pop();
+                visited[node] = false;
+                sccs[node] = sccCount;
+                if (node == current) {
+                    sccCount++;
+                }
+            }
+        }
+    }
 }
 
 int tarjanSccSolver(const vector<vector<int>>& graph, vector<int>& sccs) {
@@ -38,13 +140,13 @@ int tarjanSccSolver(const vector<vector<int>>& graph, vector<int>& sccs) {
   vector<int> ids(n, UNVISITED);
   vector<int> low(n, 0);
   vector<bool> visited(n, false);
-  stack<int> stack;
+  stack<int> stackOriginal;
   int id = 0;
   int sccCount = 0;
 
   for (int i = 0; i < n; i++) {
     if (ids[i] == UNVISITED) {
-      dfs(i, graph, ids, low, sccs, visited, stack, id, sccCount);
+      dfs(i, graph, ids, low, sccs, visited, stackOriginal, id, sccCount);
     }
   }
 
@@ -81,13 +183,15 @@ int findLongestRoute(const vector<vector<int>>& sccGraph, int source, vector<int
 
 int main() {
   int vertices, edges;
-  scanf("%d %d", &vertices, &edges);
+  if (scanf("%d %d", &vertices, &edges) == EOF) 
+    return 0;
 
   vector<vector<int>> graph(vertices);
 
   for (int i = 0; i < edges; ++i) {
     int u, v;
-    scanf("%d %d", &u, &v);
+    if (scanf("%d %d", &u, &v) == EOF) 
+      return 0;
     graph[u - 1].push_back(v - 1); // Adjust to 0-based indexing
   }
 
