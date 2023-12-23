@@ -1,4 +1,4 @@
-from pulp import LpProblem, LpVariable, lpSum, value, LpMaximize
+from pulp import LpProblem, LpVariable, lpSum, value, LpMaximize, PULP_CBC_CMD
 
 def get_inputs():
     base = list(map(int, input().split()))
@@ -39,14 +39,7 @@ def calculate(n, p, max_toys, products, specials):
     prob += lpSum(toy_vars) + lpSum(special_vars)*3 <= max_toys
 
     # solve the problem
-    prob.solve()
-
-    for constraint_name, constraint in prob.constraints.items():
-        print(f"Constraint {constraint_name}: {constraint}")
-
-    # print the optimal values
-    for v in prob.variables():
-        print(v.name, "=", v.varValue)
+    prob.solve(PULP_CBC_CMD(msg=False))
 
     # return the result
     return value(prob.objective)
@@ -54,6 +47,6 @@ def calculate(n, p, max_toys, products, specials):
 def main():
     n, p, max_toys, products, specials = get_inputs()
     result = calculate(n, p, max_toys, products, specials)
-    print(result)
+    print(result.__int__())
 
 main()
