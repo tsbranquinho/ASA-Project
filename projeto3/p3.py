@@ -12,10 +12,10 @@ def get_inputs():
     return n, p, max_toys, products, specials
 
 def calculate(n, p, max_toys, products, specials):
-    # Create a LP problem
+    # create a LP problem
     prob = LpProblem("MaximizeProfit", LpMaximize)
 
-    # Define variables
+    # define variables
     toy_vars = [LpVariable(f"x{i}", lowBound=0, cat="Integer") for i in range(n)]
     special_vars = [LpVariable(f"sp{i}", lowBound = 0, cat="Integer") for i in range(p)]
 
@@ -23,6 +23,7 @@ def calculate(n, p, max_toys, products, specials):
     prob += lpSum(products[i][0] * toy_vars[i] for i in range(n)) + \
             lpSum(specials[i][3] * special_vars[i] for i in range(p)), "Total_Profit"
     
+    # limit the total number of toys
     prob += lpSum(toy_vars) + lpSum(special_vars)*3 <= max_toys
 
     # production limits for individual toys
@@ -35,14 +36,14 @@ def calculate(n, p, max_toys, products, specials):
         for j in specials[i][:3]:
             prob += special_vars[i] <= toy_vars[j-1]
 
-    # Solve the problem
+    # solve the problem
     prob.solve()
 
-    # Print the optimal values
+    # print the optimal values
     for v in prob.variables():
         print(v.name, "=", v.varValue)
 
-    # Return the result
+    # return the result
     return value(prob.objective)
 
 def main():
