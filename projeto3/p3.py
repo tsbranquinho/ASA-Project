@@ -22,22 +22,27 @@ def calculate(n, p, max_toys, products, specials):
     # maximize total profit
     prob += lpSum(products[i][0] * toy_vars[i] for i in range(n)) + \
             lpSum(specials[i][3] * special_vars[i] for i in range(p)), "Total_Profit"
-    
+
+    # Constraints:
+    # limit the number of toys
+    # limit the number of toys in each special pack
+    # account for all special packs
+    for i in range(n):
+        packs = []
+        for j in range(p):
+            if i+1 in specials[j][:3]:
+                packs.append(special_vars[j])
+        prob += lpSum(packs) <= products[i][1] - toy_vars[i]
+        prob += toy_vars[i] >= 0
+
     # limit the total number of toys
     prob += lpSum(toy_vars) + lpSum(special_vars)*3 <= max_toys
 
-    # production limits for individual toys
-    for i in range(n):
-        prob += toy_vars[i] >= 0
-        prob += toy_vars[i] <= products[i][1]
-
-    # special packages must contain the required individual toys
-    for i in range(p):
-        for j in specials[i][:3]:
-            prob += special_vars[i] <= toy_vars[j-1]
-
     # solve the problem
     prob.solve()
+
+    for constraint_name, constraint in prob.constraints.items():
+        print(f"Constraint {constraint_name}: {constraint}")
 
     # print the optimal values
     for v in prob.variables():
