@@ -1,92 +1,59 @@
-# ASA Projeto
+# ASA Project 23/24
 
+## Project Overview
 
+This repository contains three related projects developed as part of the **Análise e Síntese de Algoritmos** course for the 2023/2024 academic year. These projects focus on optimization, simulation, and algorithm design, applying fundamental concepts in computer science and algorithm analysis.
 
-## Getting started
+The projects tackle real-world problems, such as optimizing the cutting of materials, simulating the spread of diseases in a population, and maximizing profit from toy production during the holiday season. Each project demonstrates the application of advanced algorithms to achieve optimal solutions.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Team Members
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- **Tiago Branquinho** (GitHub: [tsbranquinho](https://github.com/tsbranquinho))
+- **Rafael Avelar** (GitHub: [RafaelAvelar14](https://github.com/RafaelAvelar14))
 
-## Add your files
+## Project Structure
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+The repository is organized into three separate sub-projects, each with its own directory and related files. Below is a brief description of each sub-project:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.rnl.tecnico.ulisboa.pt/ist1106635/asa-projeto.git
-git branch -M master
-git push -uf origin master
-```
+### 1. **Optimizing Marble Cutting (Project 1)**
 
-## Integrate with your tools
+- **Description**: This project focuses on optimizing the cutting process of marble slabs, aiming to produce the maximum possible value by making vertical and horizontal cuts. It uses dynamic programming to calculate the best combination of cuts.
+- **Directory Contents**:
+  - `p1.cpp`: C++ implementation for the marble cutting optimization.
+  - `p1.pdf`: Problem description and specifications for Project 1.
+  - `Makefile`: Build configuration for the project.
+  - `README.md`: Detailed instructions for Project 1.
 
-- [ ] [Set up project integrations](https://gitlab.rnl.tecnico.ulisboa.pt/ist1106635/asa-projeto/-/settings/integrations)
+### 2. **Disease Transmission Simulation (Project 2)**
 
-## Collaborate with your team
+- **Description**: This project simulates the transmission of diseases in a population using a directed graph representing social relationships. The goal is to compute the maximum number of transmission steps a disease can take through the network.
+- **Directory Contents**:
+  - `p2.cpp`: C++ implementation for the disease transmission simulation using Tarjan’s Algorithm for Strongly Connected Components (SCC).
+  - `p2.pdf`: Problem description and specifications for Project 2.
+  - `Makefile`: Build configuration for the project.
+  - `README.md`: Detailed instructions for Project 2.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### 3. **Christmas Toy Production Optimization (Project 3)**
 
-## Test and Deploy
+- **Description**: This project optimizes toy production and sales during the Christmas season. The task is to determine the maximum profit obtainable by producing a set of toys and special packages, taking production limits into account. The solution is implemented using Python and the PuLP library for Linear Programming (LP).
+- **Directory Contents**:
+  - `p3.py`: Python implementation using the PuLP library to solve the toy production optimization problem.
+  - `p3.pdf`: Problem description and specifications for Project 3.
+  - `Makefile`: Build configuration for the project.
+  - `README.md`: Detailed instructions for Project 3.
 
-Use the built-in continuous integration in GitLab.
+---
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Getting Started
 
-***
+Each sub-project is designed to be self-contained, and you can explore each project independently by navigating to its respective directory. You can find detailed instructions and specifications for each project in their individual `README.md` files.
 
-# Editing this README
+The **`Makefile`** in each project provides build instructions to easily compile and execute the code.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Conclusion
 
-## Name
-Choose a self-explaining name for your project.
+These three projects demonstrate the application of algorithmic principles and optimization techniques to solve different types of real-world problems. From optimizing material cutting processes to simulating disease transmission and maximizing holiday season profits, each project showcases essential concepts in algorithm design and computational problem-solving.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+---

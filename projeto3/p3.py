@@ -1,60 +1,54 @@
 from pulp import LpProblem, LpVariable, lpSum, value, LpMaximize, GLPK
+import sys
 
 def get_inputs():
-    base = list(map(int, input().split()))
-    n, p, max_toys = base[0], base[1], base[2]
-    products = []
-    specials = []
-    for _ in range(n):
-        products.append(list(map(int, input().split())))
-    for _ in range(p):
-        specials.append(list(map(int, input().split())))
-    return n, p, max_toys, products, specials
+    n, p, max_toys = map(int, sys.stdin.readline().split())
+    return n, p, max_toys
 
-def calculate(n, p, max_toys, products, specials):
-    # create a LP problem
+def calculate(n, p, max_toys):
     prob = LpProblem("MaximizeProfit", LpMaximize)
+    packs = {}
+    max_each_toy = []
     toy_vars = []
     special_vars = []
-    toy_objective = []
-    special_objective = []
-    packs = [[] for _ in range(n)]
+    toy_objective = 0
+    special_objective = 0
+
+    for i in range(n):
+        product = list(map(int, sys.stdin.readline().split()))
+        max_each_toy.append(product[1])
+        toy_vars.append(LpVariable(f"x{i}", lowBound=0, upBound= product[1], cat="Integer"))
+        toy_objective += product[0] * toy_vars[i]
 
     for i in range(p):
-        special_vars += [LpVariable(f"sp{i}", lowBound = 0, cat="Integer")]
-        special_objective += [specials[i][3] * special_vars[i]]
+        special = list(map(int, sys.stdin.readline().split()))
+        special_vars.append(LpVariable(f"sp{i}", lowBound=0, cat="Integer"))
+        special_objective += special[3] * special_vars[i]
         for j in range(3):
-            packs[specials[i][j] - 1].append(special_vars[i])
+            try:
+                packs[special[j] - 1] += special_vars[i]
+            except KeyError:
+                packs[special[j] - 1] = special_vars[i]
+    
+    # restrictions for toys
     for i in range(n):
-        toy_vars += [LpVariable(f"x{i}", lowBound=0, cat="Integer")]
-        toy_objective += [products[i][0] * toy_vars[i]]
-        prob += toy_vars[i] >= 0
-        prob += lpSum(packs[i]) <= products[i][1] - toy_vars[i]
+        try:
+            prob += packs[i] <= max_each_toy[i] - toy_vars[i]
+        except KeyError:
+            pass
+
+    # restrictions for total toys
     prob += lpSum(toy_vars) + lpSum(special_vars)*3 <= max_toys
-    prob += lpSum(toy_objective) + lpSum(special_objective), "Total_Profit"
 
-    # Constraints:
-    # limit the number of toys
-    # limit the number of toys in each special pack
-    # account for all special packs
-    #for i in range(n):
-    #    packs = []
-    #    for j in range(p):
-    #        if i+1 in specials[j][:3]:
-    #            packs.append(special_vars[j])
-    #    prob += lpSum(packs) <= products[i][1] - toy_vars[i]
+    # maximize profit
+    prob += toy_objective + special_objective, "Total_Profit"
 
-    # limit the total number of toys
-
-    # solve the problem
-    prob.solve(GLPK(msg=0))
-
-    # return the result
-    return value(prob.objective)
+    prob.solve(GLPK(msg = 0))
+    return int(value(prob.objective))
 
 def main():
-    n, p, max_toys, products, specials = get_inputs()
-    result = calculate(n, p, max_toys, products, specials)
-    print(result.__int__())
+    n, p, max_toys = get_inputs()
+    result = calculate(n, p, max_toys)
+    print(result)
 
 main()
